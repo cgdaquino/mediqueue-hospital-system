@@ -221,3 +221,23 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# MediQueue - Virtual Environments
+.venv/
+.venv-1/
+
+# Python Cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# SQLite Database
+*.db
+*.sqlite3
+
+# Environment Variables
+.env
+.env.*
+
+# Flask Instance Files
+instance/
