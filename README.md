@@ -8,6 +8,50 @@ Integration), Christine Nicole E. Asi (Admin Portal), Lord Grey D. Quiatchon
 (Patient Portal), and JM D. Vijar (Database). The Git history additionally records
 testing and documentation contributions.
 
+## Live Demo & Test Credentials
+
+* *Live Website:* https://mediqueue-hospital-system.onrender.com
+* (Note: If hosted on a free tier, please allow ~30 seconds for the server to wake up on the first visit.)
+
+### Demo Login Accounts (For Evaluation)
+
+| Role | Username / Email | Password | Access Level |
+| :--- | :--- | :--- | :--- |
+| *Admin* | admin@mediqueue.test | MediQueueLocal2026! | Full system & queue management |
+| *Doctor* | doctor@mediqueue.test | MediQueueLocal2026! | Doctor dashboard & patient consultations |
+| *Patient* | patient@mediqueue.test | MediQueueLocal2026! | Appointment booking & live queue tracking |
+
+## How to Run via GitHub Codespaces or Locally (Backup Option)
+
+If the live demo link is unavailable, you can run the full application directly in your browser using *GitHub Codespaces* or on your local machine:
+
+### Option A: Run in GitHub Codespaces (No Setup Required)
+1. Click the green **<> Code** button at the top of this repository.
+2. Switch to the *Codespaces* tab and click *Create codespace on main*.
+3. Once the terminal loads at the bottom, run:
+   
+   pip install -r requirements.txt
+   python run.py
+   
+4. Click *"Open in Browser"* when the port notification pops up (or open the *Ports* tab and click the globe icon next to port 5000).
+
+### Option B: Run Locally on Your Computer
+1. Clone the repository and open the project folder:
+   
+   git clone https://github.com
+   cd mediqueue-hospital-system
+   
+2. Install dependencies and start the server:
+   
+   pip install -r requirements.txt
+   python run.py
+   
+3. Open http://127.0.0.1:5000 in your browser.
+
+### Running Automated Tests
+To verify all 146 unit and workflow tests:
+python -m pytest tests/
+
 ## Run locally
 
 Use Python 3.11 or newer. From the repository folder:
