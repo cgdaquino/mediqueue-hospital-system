@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MediQueue | Doctor Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <header class="bg-white border-b p-5">
+        <div class="max-w-6xl mx-auto flex justify-between">
+            <h1 class="text-2xl font-bold text-teal-700">MediQueue</h1>
+            <span class="text-slate-500">Doctor Portal</span>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto p-6 space-y-6">
+        <section class="bg-teal-700 text-white rounded-2xl p-7">
+            <h2 class="text-3xl font-bold">Dr. Maria Santos</h2>
+            <p class="text-teal-100 mt-2">General Medicine</p>
+        </section>
+
+        <section class="grid md:grid-cols-3 gap-4">
+            <div class="bg-white border rounded-xl p-5">
+                <p class="text-slate-500">Total Appointments</p>
+                <p id="total" class="text-3xl font-bold">0</p>
+            </div>
+            <div class="bg-white border rounded-xl p-5">
+                <p class="text-slate-500">Completed</p>
+                <p id="completed" class="text-3xl font-bold">0</p>
+            </div>
+            <div class="bg-white border rounded-xl p-5">
+                <p class="text-slate-500">Waiting</p>
+                <p id="waiting" class="text-3xl font-bold">0</p>
+            </div>
+        </section>
+
+        <section class="bg-white border rounded-2xl p-6 space-y-4">
+            <h3 class="text-xl font-bold">Appointment Calendar</h3>
+            <input type="date" id="selectedDate"
+                class="border rounded-lg p-3">
+            <p class="text-sm text-slate-500">
+                Select a date to view the patient schedule.
+            </p>
+        </section>
+
+        <section class="bg-white border rounded-2xl p-6">
+            <h3 class="text-xl font-bold mb-4">Patient Queue</h3>
+            <div id="queue" class="space-y-3"></div>
+        </section>
+
+        <section class="bg-white border rounded-2xl p-6 space-y-4">
+            <h3 class="text-xl font-bold">Block an Unavailable Date</h3>
+            <div class="flex flex-wrap gap-3">
+                <input type="date" id="blockedDate"
+                    class="border rounded-lg p-3">
+                <button id="blockButton"
+                    class="bg-teal-700 text-white px-5 rounded-lg">
+                    Block Date
+                </button>
+            </div>
+            <ul id="blockedList"
+                class="text-sm text-slate-600 space-y-1"></ul>
+        </section>
+    </main>
+
+    <script>
+        // Sample data for frontend demonstration only.
+        const today = new Date();
+        const localDate = new Date(today.getTime() -
+            today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+
+        const appointments = [
+            {id: 1, patient: "Juan Dela Cruz", time: "09:00", status: "Confirmed"},
+            {id: 2, patient: "Ana Reyes", time: "09:30", status: "Confirmed"},
+            {id: 3, patient: "Mark Garcia", time: "10:00", status: "Confirmed"}
+        ].map(a => ({...a, date: localDate}));
+
+        const blockedDates = new Set();
+        const selectedDate = document.getElementById("selectedDate");
+        selectedDate.value = localDate;
+
+        function renderQueue() {
+            const container = document.getElementById("queue");
+            container.replaceChildren();
+
+            const daily = appointments.filter(a => a.date === selectedDate.value);
+
+            document.getElementById("total").textContent = daily.length;
+            document.getElementById("completed").textContent =
+                daily.filter(a => a.status === "Completed").length;
+            document.getElementById("waiting").textContent =
+                daily.filter(a => a.status === "Confirmed").length;
+
+            if (!daily.length) {
+                container.textContent = "No appointments scheduled.";
+                return;
+            }
+
+            daily.forEach((a, index) => {
+                const row = document.createElement("div");
+                row.className =
+                    "border rounded-lg p-4 flex flex-wrap items-center justify-between gap-3";
+
+                const info = document.createElement("p");
+                info.textContent =
+                    `Queue ${index + 1} | ${a.time} | ${a.patient} | ${a.status}`;
+                row.appendChild(info);
+
+                if (a.status === "Confirmed") {
+                    const actions = document.createElement("div");
+                    actions.className = "flex gap-3";
+
+                    ["Completed", "No-show"].forEach(status => {
+                        const button = document.createElement("button");
+                        button.textContent = status;
+                        button.className = "text-teal-700 font-medium";
+                        button.addEventListener("click", () => {
+                            a.status = status;
+                            renderQueue();
+                        });
+                        actions.appendChild(button);
+                    });
+
+                    row.appendChild(actions);
+                }
+
+                container.appendChild(row);
+            });
+        }
+
+        function renderBlocked() {
+            const list = document.getElementById("blockedList");
+            list.replaceChildren();
+
+            [...blockedDates].sort().forEach(date => {
+                const item = document.createElement("li");
+                item.textContent = `Unavailable: ${date}`;
+                list.appendChild(item);
+            });
+        }
+
+        document.getElementById("blockButton").addEventListener("click", () => {
+            const date = document.getElementById("blockedDate").value;
+            if (!date) return alert("Select a date first.");
+            blockedDates.add(date);
+            renderBlocked();
+        });
+
+        selectedDate.addEventListener("change", renderQueue);
+        renderQueue();
+    </script>
+</body>
+</html>
