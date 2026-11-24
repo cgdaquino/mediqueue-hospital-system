@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MediQueue | Patient Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+  <header class="bg-white border-b">
+    <nav class="max-w-6xl mx-auto p-5 flex justify-between">
+      <h1 class="text-2xl font-bold text-teal-700">MediQueue</h1>
+      <span class="text-sm text-slate-500">Patient Portal</span>
+    </nav>
+  </header>
+  <main class="max-w-6xl mx-auto p-6 space-y-7">
+    <section class="bg-teal-700 text-white rounded-2xl p-8">
+      <h2 class="text-3xl font-bold">Welcome, Patient!</h2>
+      <p class="mt-2 text-teal-100">
+        Find a doctor and schedule your next visit.
+      </p>
+    </section>
+    <section class="grid md:grid-cols-3 gap-4">
+      <div class="bg-white rounded-xl border p-5">
+        <p class="text-slate-500">Upcoming</p>
+        <p id="upcoming" class="text-3xl font-bold">0</p>
+      </div>
+      <div class="bg-white rounded-xl border p-5">
+        <p class="text-slate-500">Completed</p>
+        <p class="text-3xl font-bold">0</p>
+      </div>
+      <div class="bg-white rounded-xl border p-5">
+        <p class="text-slate-500">Notifications</p>
+        <p id="noticeCount" class="text-3xl font-bold">0</p>
+      </div>
+    </section>
+    <section class="bg-white border rounded-2xl p-6 space-y-5">
+      <h3 class="text-xl font-bold">Book an Appointment</h3>
+      <form id="bookingForm" class="grid md:grid-cols-2 gap-4">
+        <label class="block">
+          <span class="text-sm font-medium">Department</span>
+          <select id="department" class="mt-2 w-full border rounded-lg p-3" required>
+            <option value="">Select department</option>
+            <option>General Medicine</option>
+            <option>Cardiology</option>
+            <option>Pediatrics</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="text-sm font-medium">Doctor</span>
+          <select id="doctor" class="mt-2 w-full border rounded-lg p-3" required>
+            <option value="">Select doctor</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="text-sm font-medium">Appointment Date</span>
+          <input id="date" type="date"
+                 class="mt-2 w-full border rounded-lg p-3" required>
+        </label>
+        <label class="block">
+          <span class="text-sm font-medium">Available Time</span>
+          <select id="time" class="mt-2 w-full border rounded-lg p-3" required>
+            <option value="">Select time</option>
+          </select>
+        </label>
+        <button class="md:col-span-2 bg-teal-700 text-white rounded-lg p-3 hover:bg-teal-800">
+          Confirm Appointment
+        </button>
+      </form>
+      <p id="message" role="status" class="text-sm text-teal-700"></p>
+    </section>
+    <section class="bg-white border rounded-2xl p-6">
+      <h3 class="text-xl font-bold mb-4">My Appointments</h3>
+      <div id="appointments" class="space-y-3">
+        <p class="text-slate-500">No appointments yet.</p>
+      </div>
+    </section>
+  </main>
+  <script>
+    // Frontend prototype: replace sample data with Flask API calls.
+    const doctors = {
+      "General Medicine": ["Dr. Maria Santos", "Dr. Juan Reyes"],
+      "Cardiology": ["Dr. Ana Cruz"],
+      "Pediatrics": ["Dr. Sofia Garcia"]
+    };
+    const times = ["09:00", "09:30", "10:00", "10:30", "11:00", "13:00"];
+    const bookings = [];
+    const department = document.getElementById("department");
+    const doctor = document.getElementById("doctor");
+    const date = document.getElementById("date");
+    const time = document.getElementById("time");
+    const today = new Date();
+    const localDate = new Date(today.getTime() -
+      today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    date.min = localDate;
+    department.addEventListener("change", () => {
+      doctor.innerHTML = '<option value="">Select doctor</option>';
+      (doctors[department.value] || []).forEach(name => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        doctor.appendChild(option);
+      });
+      refreshTimes();
+    });
+    doctor.addEventListener("change", refreshTimes);
+    date.addEventListener("change", refreshTimes);
+    function refreshTimes() {
+      time.innerHTML = '<option value="">Select time</option>';
+      if (!doctor.value || !date.value) return;
+      times.forEach(slot => {
+        const taken = bookings.some(b =>
+          b.doctor === doctor.value &&
+          b.date === date.value &&
+          b.time === slot &&
+          b.status === "Confirmed"
+        );
+        if (!taken && new Date(`${date.value}T${slot}:00`) > new Date()) {
+          const option = document.createElement("option");
+          option.value = slot;
+          option.textContent = slot;
+          time.appendChild(option);
+        }
+      });
+    }
+    document.getElementById("bookingForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const booking = {
+        id: `MQ-${String(bookings.length + 1).padStart(4, "0")}`,
+        doctor: doctor.value,
+        department: department.value,
+        date: date.value,
+        time: time.value,
+        status: "Confirmed"
+      };
+      if (!booking.doctor || !booking.date || !booking.time) return;
+      bookings.push(booking);
+      document.getElementById("message").textContent =
+        `Appointment ${booking.id} confirmed (demo only).`;
+      document.getElementById("noticeCount").textContent = bookings.length;
+      renderBookings();
+      refreshTimes();
+    });
+    function cancelBooking(id) {
+      const booking = bookings.find(b => b.id === id);
+      if (booking) booking.status = "Cancelled";
+      renderBookings();
+      refreshTimes();
+    }
+    function renderBookings() {
+      const container = document.getElementById("appointments");
+      container.replaceChildren();
+      document.getElementById("upcoming").textContent =
+        bookings.filter(b => b.status === "Confirmed").length;
+      if (!bookings.length) {
+        container.textContent = "No appointments yet.";
+        return;
+      }
+      bookings.forEach(b => {
+        const row = document.createElement("div");
+        row.className = "border rounded-lg p-4 flex flex-wrap justify-between gap-3";
+        const details = document.createElement("p");
+        details.textContent =
+          `${b.id} | ${b.doctor} | ${b.date} ${b.time} | ${b.status}`;
+        row.appendChild(details);
+        if (b.status === "Confirmed") {
+          const button = document.createElement("button");
+          button.className = "text-red-600 font-medium";
+          button.textContent = "Cancel";
+          button.addEventListener("click", () => cancelBooking(b.id));
+          row.appendChild(button);
+        }
+        container.appendChild(row);
+      });
+    }
+  </script>
+</body>
+</html>
