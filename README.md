@@ -17,9 +17,9 @@ testing and documentation contributions.
 
 | Role | Username / Email | Password | Access Level |
 | :--- | :--- | :--- | :--- |
-| *Admin* | admin@mediqueue.test | MediQueueLocal2026! | Full system & queue management |
-| *Doctor* | doctor@mediqueue.test | MediQueueLocal2026! | Doctor dashboard & patient consultations |
-| *Patient* | patient@mediqueue.test | MediQueueLocal2026! | Appointment booking & live queue tracking |
+| *Admin* | admin@mediqueue.test | DemoPass123! | Full system & queue management |
+| *Doctor* | doctor@mediqueue.test | DemoPass123! | Doctor dashboard & patient consultations |
+| *Patient* | patient@mediqueue.test | DemoPass123! | Appointment booking & live queue tracking |
 
 ## How to Run via GitHub Codespaces or Locally (Backup Option)
 
