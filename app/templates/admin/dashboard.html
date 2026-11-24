@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MediQueue | Admin Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <header class="bg-white border-b p-5">
+    <nav class="max-w-6xl mx-auto flex justify-between">
+      <h1 class="text-2xl font-bold text-teal-700">MediQueue</h1>
+      <span class="text-slate-500">Administrator Portal</span>
+    </nav>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-6 space-y-6">
+    <section class="bg-slate-900 text-white p-8 rounded-2xl">
+      <h2 class="text-3xl font-bold">Hospital Overview</h2>
+      <p class="text-slate-300 mt-2">
+        Manage appointments, walk-ins, and hospital activity.
+      </p>
+    </section>
+
+    <section class="grid md:grid-cols-4 gap-4">
+      <div class="bg-white border rounded-xl p-5">
+        <p class="text-slate-500">Total Bookings</p>
+        <p id="total" class="text-3xl font-bold">0</p>
+      </div>
+      <div class="bg-white border rounded-xl p-5">
+        <p class="text-slate-500">Confirmed</p>
+        <p id="confirmed" class="text-3xl font-bold">0</p>
+      </div>
+      <div class="bg-white border rounded-xl p-5">
+        <p class="text-slate-500">Completed</p>
+        <p id="completed" class="text-3xl font-bold">0</p>
+      </div>
+      <div class="bg-white border rounded-xl p-5">
+        <p class="text-slate-500">Walk-ins</p>
+        <p id="walkins" class="text-3xl font-bold">0</p>
+      </div>
+    </section>
+
+    <section class="bg-white border rounded-2xl p-6">
+      <h3 class="text-xl font-bold mb-5">Register Walk-in Patient</h3>
+      <form id="walkinForm" class="grid md:grid-cols-2 gap-4">
+        <label>
+          <span class="text-sm font-medium">Patient Name</span>
+          <input id="patient" required
+                 class="mt-2 w-full border rounded-lg p-3"
+                 placeholder="Full name">
+        </label>
+        <label>
+          <span class="text-sm font-medium">Doctor</span>
+          <select id="doctor" required
+                  class="mt-2 w-full border rounded-lg p-3">
+            <option value="">Select doctor</option>
+            <option>Dr. Maria Santos</option>
+            <option>Dr. Ana Cruz</option>
+            <option>Dr. Sofia Garcia</option>
+          </select>
+        </label>
+        <label>
+          <span class="text-sm font-medium">Date</span>
+          <input id="date" type="date" required
+                 class="mt-2 w-full border rounded-lg p-3">
+        </label>
+        <label>
+          <span class="text-sm font-medium">Time</span>
+          <select id="time" required
+                  class="mt-2 w-full border rounded-lg p-3">
+            <option value="">Select time</option>
+            <option>09:00</option>
+            <option>09:30</option>
+            <option>10:00</option>
+            <option>10:30</option>
+            <option>11:00</option>
+            <option>13:00</option>
+          </select>
+        </label>
+        <button class="md:col-span-2 bg-teal-700 text-white rounded-lg p-3">
+          Register Walk-in
+        </button>
+      </form>
+      <p id="message" role="status" class="mt-3 text-teal-700 text-sm"></p>
+    </section>
+
+    <section class="bg-white border rounded-2xl p-6 space-y-4">
+      <div class="flex flex-wrap justify-between gap-3">
+        <h3 class="text-xl font-bold">Appointment Management</h3>
+        <button id="exportButton"
+                class="bg-slate-900 text-white px-4 py-2 rounded-lg">
+          Export CSV
+        </button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-100">
+            <tr>
+              <th class="p-3">Patient</th>
+              <th class="p-3">Doctor</th>
+              <th class="p-3">Date</th>
+              <th class="p-3">Time</th>
+              <th class="p-3">Status</th>
+              <th class="p-3">Type</th>
+            </tr>
+          </thead>
+          <tbody id="appointmentRows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Demo-only records; backend integration comes later.
+    const appointments = [
+      {
+        patient: "Juan Dela Cruz",
+        doctor: "Dr. Maria Santos",
+        date: "2026-11-25",
+        time: "09:00",
+        status: "Confirmed",
+        type: "Online"
+      },
+      {
+        patient: "Ana Reyes",
+        doctor: "Dr. Ana Cruz",
+        date: "2026-11-25",
+        time: "10:00",
+        status: "Completed",
+        type: "Online"
+      }
+    ];
+
+    const today = new Date();
+    const localDate = new Date(today.getTime() -
+      today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    document.getElementById("date").value = localDate;
+    document.getElementById("date").min = localDate;
+
+    function render() {
+      document.getElementById("total").textContent = appointments.length;
+      document.getElementById("confirmed").textContent =
+        appointments.filter(a => a.status === "Confirmed").length;
+      document.getElementById("completed").textContent =
+        appointments.filter(a => a.status === "Completed").length;
+      document.getElementById("walkins").textContent =
+        appointments.filter(a => a.type === "Walk-in").length;
+
+      const rows = document.getElementById("appointmentRows");
+      rows.replaceChildren();
+
+      appointments.forEach(a => {
+        const row = document.createElement("tr");
+        row.className = "border-b";
+        [a.patient, a.doctor, a.date, a.time, a.status, a.type]
+          .forEach(value => {
+            const cell = document.createElement("td");
+            cell.className = "p-3";
+            cell.textContent = value;
+            row.appendChild(cell);
+          });
+        rows.appendChild(row);
+      });
+    }
+
+    document.getElementById("walkinForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const patient = document.getElementById("patient").value.trim();
+      const doctor = document.getElementById("doctor").value;
+      const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
+
+      const conflict = appointments.some(a =>
+        a.doctor === doctor &&
+        a.date === date &&
+        a.time === time &&
+        a.status === "Confirmed"
+      );
+
+      if (conflict) {
+        document.getElementById("message").textContent =
+          "This doctor already has a confirmed appointment at that time.";
+        return;
+      }
+
+      appointments.push({
+        patient, doctor, date, time,
+        status: "Confirmed",
+        type: "Walk-in"
+      });
+
+      document.getElementById("message").textContent =
+        "Walk-in registered successfully (demo only).";
+      e.target.reset();
+      render();
+    });
+
+    document.getElementById("exportButton").addEventListener("click", () => {
+      const headers = ["Patient", "Doctor", "Date", "Time", "Status", "Type"];
+      const csvCell = value =>
+        '"' + String(value).replace(/"/g, '""') + '"';
+      const csv = [headers, ...appointments.map(a => [
+        a.patient, a.doctor, a.date, a.time, a.status, a.type
+      ])].map(row => row.map(csvCell).join(",")).join("\r\n");
+
+      const blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "mediqueue-appointments.csv";
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+
+    render();
+  </script>
+</body>
+</html>
