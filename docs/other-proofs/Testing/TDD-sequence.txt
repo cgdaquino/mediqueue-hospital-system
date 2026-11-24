@@ -1,0 +1,8 @@
+Recorded November 24, 2026 during final preparation.
+1. Wrote tests/test_registration_validation.py first.
+2. Added an explicit NotImplementedError stub for validate_patient_registration.
+3. Executed tests: 8 failures; see TDD-red.txt.
+4. Implemented validation for names, email format and passwords.
+5. Executed selected tests: 8 passed; see TDD-green.txt.
+6. Integrated the helper in POST /register; full suite 146 passed.
+This demonstrates one selected function. It does not claim that the entire existing app was developed using TDD. No commit was created or backdated.

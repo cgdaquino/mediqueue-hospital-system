@@ -5,14 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MediQueue | Admin Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="portal-role" content="admin">
+  <link rel="stylesheet" href="/static/portal.css">
+    <link rel="stylesheet" href="/static/aesthetic.css">
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="ambient-page ambient-admin bg-slate-50 text-slate-800">
   <header class="bg-white border-b p-5">
     <nav class="max-w-6xl mx-auto flex justify-between">
       <h1 class="text-2xl font-bold text-teal-700">MediQueue</h1>
       <span class="text-slate-500">Administrator Portal</span>
     </nav>
   </header>
+{% include "portal_nav.html" %}
 
   <main class="max-w-6xl mx-auto p-6 space-y-6">
     <section class="bg-slate-900 text-white p-8 rounded-2xl">
@@ -41,12 +46,31 @@
       </div>
     </section>
 
+    <details class="doctor-accounts-panel" id="doctorAccountsPanel">
+      <summary>Doctor accounts <span>Create and manage staff access</span></summary>
+      <div class="doctor-accounts-body">
+        <p class="doctor-accounts-note">Public sign-up creates patient accounts only. Add a doctor login here or link one to an existing profile. Passwords are stored securely and are never displayed.</p>
+        <form id="doctorAccountForm" class="doctor-account-form">
+          <label id="doctorProfileLabel">Doctor profile<select id="accountProfile"><option value="">Add a new doctor profile</option></select></label>
+          <label>Doctor name<input id="accountDoctorName" required maxlength="120" placeholder="Dr. Full Name" autocomplete="off"></label>
+          <label>Department<select id="accountDepartment" required><option>General Medicine</option><option>Cardiology</option><option>Pediatrics</option></select></label>
+          <label>Login email<input id="accountEmail" type="email" required maxlength="254" autocomplete="off"></label>
+          <label><span id="accountPasswordLabel">Initial password</span><input id="accountPassword" type="password" required minlength="8" maxlength="128" autocomplete="new-password"><span class="doctor-field-help" id="accountPasswordHelp">8–128 characters. Share it with the doctor privately.</span></label>
+          <label class="doctor-active-setting"><input id="accountActive" type="checkbox" checked>Active · allow sign-in and new bookings</label>
+          <div class="doctor-account-buttons"><button id="saveDoctorAccount" class="availability-save">Create doctor account</button><button id="cancelDoctorEdit" type="button" class="calendar-control" hidden>Cancel edit</button></div>
+        </form>
+        <p id="doctorAccountMessage" role="status" class="doctor-accounts-note"></p>
+        <p class="doctor-accounts-note">Deactivation signs the doctor out and hides them from new bookings. Review their future appointments below; they are retained rather than automatically cancelled. Account/password changes require the doctor to sign in again.</p>
+        <div class="doctor-account-table-scroll"><table class="doctor-account-table"><thead><tr><th>Doctor / Department</th><th>Login email</th><th>Status</th><th>Upcoming confirmed</th><th>Actions</th></tr></thead><tbody id="doctorAccountRows"></tbody></table></div>
+      </div>
+    </details>
+
     <section class="bg-white border rounded-2xl p-6">
       <h3 class="text-xl font-bold mb-5">Register Walk-in Patient</h3>
       <form id="walkinForm" class="grid md:grid-cols-2 gap-4">
         <label>
           <span class="text-sm font-medium">Patient Name</span>
-          <input id="patient" required
+          <input id="patient" required maxlength="120"
                  class="mt-2 w-full border rounded-lg p-3"
                  placeholder="Full name">
         </label>
@@ -94,6 +118,13 @@
         </button>
       </div>
       <div class="overflow-x-auto">
+        <div class="admin-filters">
+          <label>Search patient or doctor<input id="appointmentSearch" type="search" placeholder="Patient, doctor, or booking reference"></label>
+          <label>Sort by<select id="appointmentSort"><option value="date-asc">Date · earliest first</option><option value="date-desc">Date · latest first</option><option value="patient">Patient name · A–Z</option><option value="doctor">Doctor name · A–Z</option></select></label>
+          <label>Status<select id="appointmentStatusFilter"><option value="">All statuses</option><option>Confirmed</option><option>Completed</option><option>No-show</option><option>Cancelled</option></select></label>
+          <button id="clearAppointmentFilters" class="calendar-control">Clear</button>
+        </div>
+        <p id="appointmentResults" class="text-sm text-slate-500 mb-3" role="status"></p>
         <table class="w-full text-left text-sm">
           <thead class="bg-slate-100">
             <tr>
@@ -102,7 +133,7 @@
               <th class="p-3">Date</th>
               <th class="p-3">Time</th>
               <th class="p-3">Status</th>
-              <th class="p-3">Type</th>
+              <th class="p-3">Type</th><th class="p-3">Actions</th>
             </tr>
           </thead>
           <tbody id="appointmentRows"></tbody>
@@ -111,109 +142,9 @@
     </section>
   </main>
 
-  <script>
-    // Demo-only records; backend integration comes later.
-    const appointments = [
-      {
-        patient: "Juan Dela Cruz",
-        doctor: "Dr. Maria Santos",
-        date: "2026-11-25",
-        time: "09:00",
-        status: "Confirmed",
-        type: "Online"
-      },
-      {
-        patient: "Ana Reyes",
-        doctor: "Dr. Ana Cruz",
-        date: "2026-11-25",
-        time: "10:00",
-        status: "Completed",
-        type: "Online"
-      }
-    ];
-
-    const today = new Date();
-    const localDate = new Date(today.getTime() -
-      today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-    document.getElementById("date").value = localDate;
-    document.getElementById("date").min = localDate;
-
-    function render() {
-      document.getElementById("total").textContent = appointments.length;
-      document.getElementById("confirmed").textContent =
-        appointments.filter(a => a.status === "Confirmed").length;
-      document.getElementById("completed").textContent =
-        appointments.filter(a => a.status === "Completed").length;
-      document.getElementById("walkins").textContent =
-        appointments.filter(a => a.type === "Walk-in").length;
-
-      const rows = document.getElementById("appointmentRows");
-      rows.replaceChildren();
-
-      appointments.forEach(a => {
-        const row = document.createElement("tr");
-        row.className = "border-b";
-        [a.patient, a.doctor, a.date, a.time, a.status, a.type]
-          .forEach(value => {
-            const cell = document.createElement("td");
-            cell.className = "p-3";
-            cell.textContent = value;
-            row.appendChild(cell);
-          });
-        rows.appendChild(row);
-      });
-    }
-
-    document.getElementById("walkinForm").addEventListener("submit", e => {
-      e.preventDefault();
-      const patient = document.getElementById("patient").value.trim();
-      const doctor = document.getElementById("doctor").value;
-      const date = document.getElementById("date").value;
-      const time = document.getElementById("time").value;
-
-      const conflict = appointments.some(a =>
-        a.doctor === doctor &&
-        a.date === date &&
-        a.time === time &&
-        a.status === "Confirmed"
-      );
-
-      if (conflict) {
-        document.getElementById("message").textContent =
-          "This doctor already has a confirmed appointment at that time.";
-        return;
-      }
-
-      appointments.push({
-        patient, doctor, date, time,
-        status: "Confirmed",
-        type: "Walk-in"
-      });
-
-      document.getElementById("message").textContent =
-        "Walk-in registered successfully (demo only).";
-      e.target.reset();
-      render();
-    });
-
-    document.getElementById("exportButton").addEventListener("click", () => {
-      const headers = ["Patient", "Doctor", "Date", "Time", "Status", "Type"];
-      const csvCell = value =>
-        '"' + String(value).replace(/"/g, '""') + '"';
-      const csv = [headers, ...appointments.map(a => [
-        a.patient, a.doctor, a.date, a.time, a.status, a.type
-      ])].map(row => row.map(csvCell).join(",")).join("\r\n");
-
-      const blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "mediqueue-appointments.csv";
-      link.click();
-      URL.revokeObjectURL(url);
-    });
-
-    render();
-  </script>
+<script src="/static/notifications.js"></script>
+<script src="/static/api.js"></script>
+<script src="/static/admin.js"></script>
+<script src="/static/doctor-accounts.js"></script>
 </body>
 </html>

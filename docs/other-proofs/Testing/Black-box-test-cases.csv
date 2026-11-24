@@ -1,0 +1,13 @@
+ID,Action,Expected,Actual,Status
+TC01,Valid public signup,Patient role only,Role enforced,Pass
+TC02,Malformed email/password,Reject invalid inputs,Validator rejected,Pass
+TC03,Patient calls admin API,HTTP 403,HTTP 403 live,Pass
+TC04,Admin creates doctor/login,Doctor dashboard access,Workflow passed,Pass
+TC05,Doctor sets hours/lunch,Only valid patient ranges,Lunch excluded,Pass
+TC06,Book occupied interval,HTTP 409,HTTP 409 live,Pass
+TC07,Create patient booking,Doctor/admin same ID,Matching feed ID,Pass
+TC08,Premature completion,409 / disabled control,Both verified,Pass
+TC09,Cancel then hide,Retain staff history,HTTP/browser passed,Pass
+TC10,Expired/conflicting undo,HTTP 409,Regression passed,Pass
+TC11,Deactivation beats booking,No booking after lock,Regression passed,Pass
+TC12,Undo for inactive doctor,Cannot reconfirm,Regression passed,Pass

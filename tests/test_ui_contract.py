@@ -25,4 +25,3 @@ def test_dashboard_contains_mediqueue_brand(role, title):
 def test_existing_homepage_exists():
     path = BASE / "app" / "templates" / "index.html"
     assert path.is_file()
-    

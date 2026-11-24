@@ -2,82 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#edf5f3">
     <title>MediQueue | Hospital Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/aesthetic.css">
+    <link rel="preload" as="image" href="/static/images/hospital-exterior.jpg">
 </head>
-
-<body class="bg-slate-50 text-slate-800">
-
-    <nav class="bg-white border-b border-slate-200">
-        <div class="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-teal-700">
-                MediQueue
-            </h1>
-
-            <span class="text-sm text-slate-500">
-                Hospital Appointment System
-            </span>
+<body class="home-page">
+    <a href="#main" class="skip-link">Skip to portals</a>
+    <div class="home-backdrop" aria-hidden="true">
+        <div class="background-scene scene-hospital is-active" data-scene="hospital"></div>
+        <div class="background-scene scene-patient" data-scene="patient"></div>
+        <div class="background-scene scene-doctor" data-scene="doctor"></div>
+        <div class="background-scene scene-admin" data-scene="admin"></div>
+    </div>
+    <header class="home-header">
+        <a class="home-brand" href="/" aria-label="MediQueue home"><span class="brand-symbol" aria-hidden="true">+</span>MediQueue<span class="brand-divider"></span><span class="brand-caption">Care, thoughtfully connected.</span></a>
+        <nav aria-label="Main navigation"><span class="home-timezone">PHT · UTC+8</span><a class="home-signin" href="/about">About us</a><a class="home-signin" href="/login">Sign in <span aria-hidden="true">↗</span></a></nav>
+    </header>
+    <main id="main" class="home-main">
+        <div class="home-intro">
+            <p class="home-eyebrow"><span aria-hidden="true"></span> YOUR CARE. YOUR TIME.</p>
+            <h1>A little less waiting.<br>A little more <em>care.</em></h1>
+            <p class="home-description">Welcome to MediQueue. Choose your portal for a simpler,<br class="desktop-break"> more connected hospital experience.</p>
         </div>
-    </nav>
-
-    <main class="max-w-6xl mx-auto px-6 py-20">
-
-        <div class="text-center mb-16">
-            <p class="text-teal-700 font-semibold mb-3">
-                Welcome to MediQueue
-            </p>
-
-            <h2 class="text-4xl font-bold mb-5">
-                Healthcare scheduling made simple.
-            </h2>
-
-            <p class="text-slate-500 max-w-2xl mx-auto">
-                A centralized platform for managing hospital
-                appointments, doctor schedules, patient queues,
-                and administrative operations.
-            </p>
+        <div class="portal-cards" aria-label="Choose your portal">
+            <a class="portal-card patient-card" href="/patient/dashboard" data-portal="patient" aria-labelledby="patient-title">
+                <div class="portal-icon" aria-hidden="true">
+                    <svg viewBox="0 0 120 120" fill="none"><path d="M27 97v-9c0-16 13-26 33-26s33 10 33 26v9" fill="currentColor"/><circle cx="60" cy="38" r="19" fill="currentColor"/><path d="M52 81c0-7 9-8 11-2 3-6 12-5 12 2 0 6-12 13-12 13S52 87 52 81Z" fill="#377f80"/></svg>
+                </div>
+                <span class="portal-eyebrow">HERE FOR YOUR HEALTH</span>
+                <h2 id="patient-title">Patient Portal</h2>
+                <p>Find your doctor, book a visit,<br>and manage your appointments.</p>
+                <span class="portal-entry">Enter patient portal <span aria-hidden="true">↗</span></span>
+            </a>
+            <a class="portal-card doctor-card" href="/doctor/dashboard" data-portal="doctor" aria-labelledby="doctor-title">
+                <div class="portal-icon" aria-hidden="true">
+                    <svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="34" r="18" fill="currentColor"/><path d="M25 101V88c0-14 10-23 24-27l11 15 11-15c14 4 24 13 24 27v13" fill="currentColor"/><path d="M44 65v15c0 12 18 12 18 0V67M53 90v7c0 9 25 9 25-3v-9" stroke="#477eab" stroke-width="5" stroke-linecap="round"/><circle cx="78" cy="81" r="6" fill="#477eab"/><path d="m59 77-4 19h11l-4-19" fill="#477eab"/></svg>
+                </div>
+                <span class="portal-eyebrow">MORE TIME FOR YOUR PATIENTS</span>
+                <h2 id="doctor-title">Doctor Portal</h2>
+                <p>Plan your availability and keep<br>your patient schedule in view.</p>
+                <span class="portal-entry">Enter doctor portal <span aria-hidden="true">↗</span></span>
+            </a>
+            <a class="portal-card admin-card" href="/admin/dashboard" data-portal="admin" aria-labelledby="admin-title">
+                <div class="portal-icon" aria-hidden="true">
+                    <svg viewBox="0 0 120 120" fill="none"><rect x="31" y="26" width="58" height="76" rx="7" fill="currentColor"/><rect x="46" y="18" width="28" height="16" rx="5" fill="#64798a" stroke="currentColor" stroke-width="4"/><path d="M47 52h26M47 66h26M47 80h15" stroke="#64798a" stroke-width="5" stroke-linecap="round"/><circle cx="85" cy="88" r="17" fill="#64798a" stroke="currentColor" stroke-width="4"/><path d="M85 80v16m-8-8h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg>
+                </div>
+                <span class="portal-eyebrow">KEEPING CARE MOVING</span>
+                <h2 id="admin-title">Admin Portal</h2>
+                <p>Coordinate appointments, register<br>walk-ins, and support your team.</p>
+                <span class="portal-entry">Enter admin portal <span aria-hidden="true">↗</span></span>
+            </a>
         </div>
-
-        <div class="grid md:grid-cols-3 gap-6">
-
-            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-                <h3 class="text-xl font-bold mb-3">Patient Portal</h3>
-                <p class="text-slate-500 mb-6">
-                    Book appointments and manage your visits.
-                </p>
-                <span class="text-teal-700 font-medium">
-                    Coming soon
-                </span>
-            </div>
-
-            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-                <h3 class="text-xl font-bold mb-3">Doctor Portal</h3>
-                <p class="text-slate-500 mb-6">
-                    View schedules and manage patient queues.
-                </p>
-                <span class="text-teal-700 font-medium">
-                    Coming soon
-                </span>
-            </div>
-
-            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-                <h3 class="text-xl font-bold mb-3">Admin Portal</h3>
-                <p class="text-slate-500 mb-6">
-                    Manage hospital operations and appointments.
-                </p>
-                <span class="text-teal-700 font-medium">
-                    Coming soon
-                </span>
-            </div>
-
-        </div>
-
+        <p class="home-registration">Your first visit? <a href="/register">Create a patient account <span aria-hidden="true">↗</span></a><br><span>Doctor and admin access is provided separately.</span></p>
     </main>
-
-    <footer class="text-center text-slate-400 text-sm py-8">
-        MediQueue &copy; 2026 | CS0053 Final Project
-    </footer>
-
+    <footer class="home-footer"><span>MediQueue © 2026</span><span>Hospital Appointment &amp; Queue Management</span><span>Philippine Time</span></footer>
+    <script src="/static/home.js"></script>
 </body>
 </html>

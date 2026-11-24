@@ -5,19 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MediQueue | Doctor Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="doctor-context" content="{{ doctor.id }}">
+    <meta name="portal-role" content="doctor">
+    <link rel="stylesheet" href="/static/portal.css">
+    <link rel="stylesheet" href="/static/aesthetic.css">
 </head>
-<body class="bg-slate-50 text-slate-800">
+<body class="ambient-page ambient-doctor bg-slate-50 text-slate-800">
     <header class="bg-white border-b p-5">
         <div class="max-w-6xl mx-auto flex justify-between">
             <h1 class="text-2xl font-bold text-teal-700">MediQueue</h1>
             <span class="text-slate-500">Doctor Portal</span>
         </div>
     </header>
+{% include "portal_nav.html" %}
 
     <main class="max-w-6xl mx-auto p-6 space-y-6">
         <section class="bg-teal-700 text-white rounded-2xl p-7">
-            <h2 class="text-3xl font-bold">Dr. Maria Santos</h2>
-            <p class="text-teal-100 mt-2">General Medicine</p>
+            <h2 class="text-3xl font-bold">{{ doctor.name }}</h2>
+            <p class="text-teal-100 mt-2">{{ doctor.department }}</p>
+            {% if demo_doctors %}
+            <label class="demo-pov">Demo doctor POV
+                <select id="doctorPov" aria-label="Demo doctor POV">
+                    {% for choice in demo_doctors %}<option value="{{ choice.id }}" {{ 'selected' if choice.id == doctor.id else '' }}>{{ choice.name }} · {{ choice.department }}</option>{% endfor %}
+                </select>
+            </label>
+            <p class="text-xs text-teal-100 mt-2">Demo only. Switch doctor to see that doctor's bookings and availability.</p>
+            {% endif %}
         </section>
 
         <section class="grid md:grid-cols-3 gap-4">
@@ -35,120 +49,99 @@
             </div>
         </section>
 
-        <section class="bg-white border rounded-2xl p-6 space-y-4">
-            <h3 class="text-xl font-bold">Appointment Calendar</h3>
-            <input type="date" id="selectedDate"
-                class="border rounded-lg p-3">
-            <p class="text-sm text-slate-500">
-                Select a date to view the patient schedule.
-            </p>
+        <details class="availability-panel">
+            <summary><span>Weekly availability &amp; lunch break</span><span class="availability-summary">Set your working days and hours</span></summary>
+            <form id="workingHoursForm" class="availability-body">
+                <label class="duration-setting">Appointment duration
+                    <select id="consultationDuration" aria-label="Appointment duration" disabled>
+                        <option value="15">15 minutes</option><option value="30">30 minutes</option><option value="45">45 minutes</option>
+                        <option value="60" selected>1 hour</option><option value="90">90 minutes</option><option value="120">2 hours</option>
+                    </select>
+                </label>
+                <p class="availability-note">The duration applies to new bookings. Existing appointments keep their original length. Set hours in Philippine Time (PHT, UTC+8); bookings must fit fully within working hours and outside lunch.</p>
+                <div class="availability-scroll"><table class="availability-table">
+                    <thead><tr><th>Day</th><th>Working</th><th>Start</th><th>Finish</th><th>Lunch break</th><th>Lunch starts</th><th>Lunch ends</th></tr></thead>
+                    <tbody id="workingHoursRows"></tbody>
+                </table></div>
+                <div class="availability-footer"><button id="saveWorkingHours" class="availability-save" disabled>Save availability</button><span id="workingHoursMessage" role="status">Loading availability…</span></div>
+                <p class="availability-note">Changes apply to future dates. Existing confirmed bookings must be resolved before you close their day or time. Use “Block an Unavailable Date” below for a single day off.</p>
+            </form>
+        </details>
+
+        <div class="schedule-view-toolbar">
+            <div class="schedule-view-tabs" role="tablist" aria-label="Schedule display">
+                <button id="calendarTab" role="tab" aria-controls="calendarPanel" aria-selected="true">Calendar</button>
+                <button id="queueTab" role="tab" aria-controls="queuePanel" aria-selected="false">Queue</button>
+            </div>
+            <label class="text-sm text-slate-500">Schedule date <input type="date" id="selectedDate" aria-label="Schedule date" class="calendar-date"></label>
+        </div>
+        <section id="calendarPanel" role="tabpanel" aria-labelledby="calendarTab" class="calendar-panel" aria-label="Appointment calendar">
+            <div class="calendar-toolbar">
+                <div>
+                    <p class="calendar-eyebrow">YOUR SCHEDULE</p>
+                    <h3 id="calendarTitle" class="calendar-title">Appointment calendar</h3>
+                </div>
+                <div class="calendar-controls">
+                    <button id="todayButton" class="calendar-control">Today</button>
+                    <button id="previousPeriod" aria-label="Previous week" class="calendar-control">‹</button>
+                    <button id="nextPeriod" aria-label="Next week" class="calendar-control">›</button>
+                    <div class="calendar-view" aria-label="Calendar view">
+                        <button id="weekView" aria-pressed="true">Week</button>
+                        <button id="dayView" aria-pressed="false">Day</button>
+                    </div>
+                </div>
+            </div>
+            <div class="calendar-subbar">
+                <span id="calendarDurationLabel">Philippine Time (PHT, UTC+8)</span>
+                <div class="calendar-sync"><span id="calendarSync" role="status">Loading schedule…</span><button id="refreshCalendar" class="calendar-refresh">Refresh</button></div>
+            </div>
+            <div class="calendar-scroll" tabindex="0" aria-label="Scroll appointment calendar">
+                <div id="calendarGrid" class="calendar-grid" aria-label="Weekly appointment schedule"></div>
+            </div>
+            <div class="calendar-legend">
+                <span><i class="legend-dot confirmed"></i>Confirmed</span>
+                <span><i class="legend-dot completed"></i>Completed</span>
+                <span><i class="legend-dot no-show"></i>No-show</span>
+                <span><i class="legend-dot blocked"></i>Unavailable</span>
+                <span><i class="legend-dot lunch"></i>Lunch</span>
+                <span><i class="legend-dot cancelled"></i>Cancelled</span>
+                <span id="calendarSummary" class="calendar-summary"></span>
+            </div>
         </section>
 
-        <section class="bg-white border rounded-2xl p-6">
-            <h3 class="text-xl font-bold mb-4">Patient Queue</h3>
+        <section id="queuePanel" role="tabpanel" aria-labelledby="queueTab" class="bg-white border rounded-2xl p-6" hidden>
+            <h3 class="text-xl font-bold mb-1">Patient Queue</h3>
+            <p id="queueDateLabel" class="text-sm text-slate-500 mb-4"></p>
             <div id="queue" class="space-y-3"></div>
         </section>
 
         <section class="bg-white border rounded-2xl p-6 space-y-4">
             <h3 class="text-xl font-bold">Block an Unavailable Date</h3>
             <div class="flex flex-wrap gap-3">
-                <input type="date" id="blockedDate"
+                <input type="date" id="blockedDate" aria-label="Unavailable date"
                     class="border rounded-lg p-3">
                 <button id="blockButton"
                     class="bg-teal-700 text-white px-5 rounded-lg">
                     Block Date
                 </button>
             </div>
+            <p id="message" role="status"></p>
             <ul id="blockedList"
                 class="text-sm text-slate-600 space-y-1"></ul>
         </section>
     </main>
+    <dialog id="appointmentDialog" class="appointment-dialog" aria-labelledby="appointmentTitle">
+        <div class="dialog-heading"><p class="calendar-eyebrow">APPOINTMENT DETAILS</p><button id="closeAppointment" aria-label="Close appointment details">×</button></div>
+        <h2 id="appointmentTitle"></h2>
+        <p id="appointmentDetails"></p>
+        <p id="appointmentStatus"></p>
+        <div id="appointmentActions" class="dialog-actions"></div>
+    </dialog>
 
-    <script>
-        // Sample data for frontend demonstration only.
-        const today = new Date();
-        const localDate = new Date(today.getTime() -
-            today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-
-        const appointments = [
-            {id: 1, patient: "Juan Dela Cruz", time: "09:00", status: "Confirmed"},
-            {id: 2, patient: "Ana Reyes", time: "09:30", status: "Confirmed"},
-            {id: 3, patient: "Mark Garcia", time: "10:00", status: "Confirmed"}
-        ].map(a => ({...a, date: localDate}));
-
-        const blockedDates = new Set();
-        const selectedDate = document.getElementById("selectedDate");
-        selectedDate.value = localDate;
-
-        function renderQueue() {
-            const container = document.getElementById("queue");
-            container.replaceChildren();
-
-            const daily = appointments.filter(a => a.date === selectedDate.value);
-
-            document.getElementById("total").textContent = daily.length;
-            document.getElementById("completed").textContent =
-                daily.filter(a => a.status === "Completed").length;
-            document.getElementById("waiting").textContent =
-                daily.filter(a => a.status === "Confirmed").length;
-
-            if (!daily.length) {
-                container.textContent = "No appointments scheduled.";
-                return;
-            }
-
-            daily.forEach((a, index) => {
-                const row = document.createElement("div");
-                row.className =
-                    "border rounded-lg p-4 flex flex-wrap items-center justify-between gap-3";
-
-                const info = document.createElement("p");
-                info.textContent =
-                    `Queue ${index + 1} | ${a.time} | ${a.patient} | ${a.status}`;
-                row.appendChild(info);
-
-                if (a.status === "Confirmed") {
-                    const actions = document.createElement("div");
-                    actions.className = "flex gap-3";
-
-                    ["Completed", "No-show"].forEach(status => {
-                        const button = document.createElement("button");
-                        button.textContent = status;
-                        button.className = "text-teal-700 font-medium";
-                        button.addEventListener("click", () => {
-                            a.status = status;
-                            renderQueue();
-                        });
-                        actions.appendChild(button);
-                    });
-
-                    row.appendChild(actions);
-                }
-
-                container.appendChild(row);
-            });
-        }
-
-        function renderBlocked() {
-            const list = document.getElementById("blockedList");
-            list.replaceChildren();
-
-            [...blockedDates].sort().forEach(date => {
-                const item = document.createElement("li");
-                item.textContent = `Unavailable: ${date}`;
-                list.appendChild(item);
-            });
-        }
-
-        document.getElementById("blockButton").addEventListener("click", () => {
-            const date = document.getElementById("blockedDate").value;
-            if (!date) return alert("Select a date first.");
-            blockedDates.add(date);
-            renderBlocked();
-        });
-
-        selectedDate.addEventListener("change", renderQueue);
-        renderQueue();
-    </script>
+<script src="/static/notifications.js"></script>
+<script src="/static/api.js"></script>
+<script src="/static/doctor-calendar.js"></script>
+<script src="/static/doctor.js"></script>
+<script src="/static/working-hours.js"></script>
 </body>
 </html>

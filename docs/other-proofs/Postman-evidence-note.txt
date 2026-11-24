@@ -1,0 +1,8 @@
+ACTUAL POSTMAN VERIFICATION
+Run: November 24, 2026 18:31:56 PHT
+33 requests; 36 passed assertions; 0 failed; 0 skipped; 0 errors.
+Duration 9s 59ms; average response 133ms.
+Postman Web with official Desktop Agent 0.5.4. Signed installer verified as Postman, Inc.
+Fictional isolated local database on port 5056; main preview data unchanged.
+The recorded run UI exposed no native Export action (only Jira/Delete in its actions menu). Postman-observed-run.json is a transcription of observed UI metrics and rendered rows, NOT a native Postman result export. The text snapshot and 11 unaltered screenshots preserve actual evidence.
+The disposable doctor was deactivated by the final request; cancelled history remains. Passwords are not included in exported deliverable environments.

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MediQueue | {{ 'Register' if register else 'Sign in' }}</title>
+<script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="/static/aesthetic.css"></head>
+<body class="ambient-page ambient-auth {{ 'ambient-patient' if register else 'ambient-hospital' }} bg-slate-50 text-slate-800"><main class="max-w-md mx-auto p-6 mt-12">
+<a class="text-teal-700 font-bold" href="/">MediQueue</a>
+<h1 class="text-3xl font-bold my-6">{{ 'Create patient account' if register else 'Sign in' }}</h1>
+<p class="auth-description">{{ "Registration is for patients only. Doctor and admin accounts are provided separately." if register else "Sign in with your patient, doctor, or administrator account." }}</p>
+{% if error %}<p role="alert" class="text-red-700 mb-4">{{ error }}</p>{% endif %}
+<form method="post" class="auth-card space-y-4 bg-white border rounded-xl p-6">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+{% if register %}<label class="block">Full name<input class="block w-full border rounded p-3" name="name" required maxlength="120" autocomplete="name"></label>{% endif %}
+<label class="block">Email<input class="block w-full border rounded p-3" name="email" type="email" required maxlength="254" autocomplete="username"></label>
+<label class="block">Password<input class="block w-full border rounded p-3" name="password" type="password" required {{ 'minlength=8' if register else '' }} autocomplete="{{ 'new-password' if register else 'current-password' }}"></label>
+<button class="bg-teal-700 text-white rounded p-3 w-full">{{ 'Create account' if register else 'Sign in' }}</button>
+</form><p class="mt-5"><a class="text-teal-700 underline" href="{{ '/login' if register else '/register' }}">{{ 'Already registered? Sign in' if register else 'New patient? Create an account' }}</a></p>
+</main></body></html>
