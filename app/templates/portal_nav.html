@@ -1,0 +1,6 @@
+<nav class="max-w-6xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-3 border-b bg-white" aria-label="Account">
+  <a href="/" class="text-teal-700 font-medium">MediQueue Home</a>
+  <span>{{ 'Demo doctor account' if current_user.demo_doctor else current_user.name }}</span>
+  <span class="text-xs text-slate-500">Philippine Time · PHT (UTC+8)</span>
+  <form method="post" action="/logout"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="text-teal-700 underline">Sign out</button></form>
+</nav>

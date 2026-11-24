@@ -1,0 +1,33 @@
+<html><head><meta charset="utf-8"><style>body{font:18px Arial;background:#f3f8f5;color:#193b3d;margin:40px}pre{background:white;padding:20px;border:1px solid #ccd9d4;font:16px/1.5 Consolas;white-space:pre-wrap}h1{font-size:30px}p{font-size:16px}</style></head><body><h1>MediQueue captured test execution output</h1><p>Actual local runs on November 24, 2026. This is a log viewer, not a terminal or Postman screenshot. Complete raw logs are supplied separately.</p><h2>Full Python regression</h2><pre>........................................................................ [ 49%]
+........................................................................ [ 98%]
+..                                                                       [100%]
+146 passed in 39.03s</pre><h2>Frontend behavior</h2><pre>✔ blocked-date error is inline, invalidates the date, and clears when available (22.1099ms)
+✔ doctor edits weekly hours and lunch controls and saves all seven days (17.9221ms)
+✔ patient removes only cancelled records from their displayed list (12.207ms)
+✔ admin refreshes cancellation status while the portal stays open (10.123ms)
+✔ admin searches across names, sorts, and keeps filters during refresh (72.3359ms)
+✔ five-second action notification provides undo and expires (6.2245ms)
+✔ calendar week begins Monday across month and year boundaries (12.8011ms)
+✔ overlapping legacy bookings remain visible in separate lanes (6.0203ms)
+✔ time ranges are explicit and cross noon correctly (3.8959ms)
+✔ doctor calendar renders bookings, navigates, opens details, and refreshes new arrivals (361.4773ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 721.1482</pre><h2>TDD red run</h2><pre>
+app\registration.py:3: NotImplementedError
+=========================== short test summary info ===========================
+FAILED tests/test_registration_validation.py::test_rejects_malformed_email[missing-domain@]
+FAILED tests/test_registration_validation.py::test_rejects_malformed_email[@missing-name.com]
+FAILED tests/test_registration_validation.py::test_rejects_malformed_email[a b@test.com]
+FAILED tests/test_registration_validation.py::test_rejects_malformed_email[a@@test.com]
+FAILED tests/test_registration_validation.py::test_rejects_unusable_password[        ]
+FAILED tests/test_registration_validation.py::test_rejects_unusable_password[short]
+FAILED tests/test_registration_validation.py::test_rejects_unusable_password[password2]
+FAILED tests/test_registration_validation.py::test_normalizes_name_and_email_without_changing_password
+8 failed in 1.57s</pre><h2>TDD green run</h2><pre>........                                                                 [100%]
+8 passed in 1.16s</pre></body></html>

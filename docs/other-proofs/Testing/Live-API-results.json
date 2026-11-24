@@ -1,0 +1,429 @@
+[
+  {
+    "method": "GET",
+    "path": "/api/working-hours",
+    "status": 200,
+    "expected": 200,
+    "passed": true,
+    "response": {
+      "days": [
+        {
+          "enabled": true,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 0
+        },
+        {
+          "enabled": true,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 1
+        },
+        {
+          "enabled": true,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 2
+        },
+        {
+          "enabled": true,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 3
+        },
+        {
+          "enabled": true,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 4
+        },
+        {
+          "enabled": false,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 5
+        },
+        {
+          "enabled": false,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 6
+        }
+      ],
+      "doctor_id": 4,
+      "duration_minutes": 60,
+      "duration_options": [
+        15,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "timezone": "Asia/Manila"
+    }
+  },
+  {
+    "method": "PUT",
+    "path": "/api/working-hours",
+    "status": 200,
+    "expected": 200,
+    "passed": true,
+    "response": {
+      "action_message": "Availability and duration saved.",
+      "days": [
+        {
+          "enabled": true,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 0
+        },
+        {
+          "enabled": true,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 1
+        },
+        {
+          "enabled": true,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 2
+        },
+        {
+          "enabled": true,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 3
+        },
+        {
+          "enabled": true,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 4
+        },
+        {
+          "enabled": false,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 5
+        },
+        {
+          "enabled": false,
+          "end": "17:00",
+          "lunch_end": "13:00",
+          "lunch_start": "12:00",
+          "start": "09:00",
+          "weekday": 6
+        }
+      ],
+      "doctor_id": 4,
+      "duration_minutes": 30,
+      "duration_options": [
+        15,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "timezone": "Asia/Manila",
+      "undo": {
+        "expires_at": 1795513637.6166284,
+        "seconds": 5,
+        "token": "h5YoeIXlXs_9PNLFUxvdKe8M82qDZ05E"
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "path": "/api/doctors",
+    "status": 200,
+    "expected": 200,
+    "passed": true,
+    "response": {
+      "doctors": [
+        {
+          "department": "General Medicine",
+          "id": 1,
+          "name": "Dr. Maria Santos"
+        },
+        {
+          "department": "Cardiology",
+          "id": 2,
+          "name": "Dr. Ana Cruz"
+        },
+        {
+          "department": "Pediatrics",
+          "id": 3,
+          "name": "Dr. Sofia Garcia"
+        },
+        {
+          "department": "Cardiology",
+          "id": 4,
+          "name": "Dr. Workflow Test"
+        }
+      ],
+      "today": "2030-01-01"
+    }
+  },
+  {
+    "method": "GET",
+    "path": "/api/availability?doctor_id=4&date=2030-01-02",
+    "status": 200,
+    "expected": 200,
+    "passed": true,
+    "response": {
+      "blocked": false,
+      "duration_minutes": 30,
+      "reason": "",
+      "schedule": {
+        "enabled": true,
+        "end": "17:00",
+        "lunch_end": "13:00",
+        "lunch_start": "12:00",
+        "start": "09:00",
+        "weekday": 2
+      },
+      "slots": [
+        "09:00",
+        "09:30",
+        "10:00",
+        "10:30",
+        "11:00",
+        "11:30",
+        "13:00",
+        "13:30",
+        "14:00",
+        "14:30",
+        "15:00",
+        "15:30",
+        "16:00",
+        "16:30"
+      ]
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/api/appointments",
+    "status": 201,
+    "expected": 201,
+    "passed": true,
+    "response": {
+      "action_message": "Appointment booked.",
+      "date": "2030-01-02",
+      "department": "Cardiology",
+      "doctor": "Dr. Workflow Test",
+      "doctor_id": 4,
+      "duration_minutes": 30,
+      "end_time": "09:30",
+      "id": 1,
+      "patient": "Journey Patient",
+      "reference": "MQ-0001",
+      "status": "Confirmed",
+      "time": "09:00",
+      "type": "Online",
+      "undo": {
+        "expires_at": 1795513637.7060888,
+        "seconds": 5,
+        "token": "LK70-HojAcQFGyigEEB2WXhLt-Eomv28"
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "path": "/api/appointments",
+    "status": 200,
+    "expected": 200,
+    "passed": true,
+    "response": {
+      "appointments": [
+        {
+          "date": "2030-01-02",
+          "department": "Cardiology",
+          "doctor": "Dr. Workflow Test",
+          "doctor_id": 4,
+          "duration_minutes": 30,
+          "end_time": "09:30",
+          "id": 1,
+          "patient": "Journey Patient",
+          "reference": "MQ-0001",
+          "status": "Confirmed",
+          "time": "09:00",
+          "type": "Online"
+        }
+      ],
+      "doctor_id": 4,
+      "now": "2030-01-01T08:00:00"
+    }
+  },
+  {
+    "method": "GET",
+    "path": "/api/appointments",
+    "status": 200,
+    "expected": 200,
+    "passed": true,
+    "response": {
+      "appointments": [
+        {
+          "date": "2030-01-02",
+          "department": "Cardiology",
+          "doctor": "Dr. Workflow Test",
+          "doctor_id": 4,
+          "duration_minutes": 30,
+          "end_time": "09:30",
+          "id": 1,
+          "patient": "Journey Patient",
+          "reference": "MQ-0001",
+          "status": "Confirmed",
+          "time": "09:00",
+          "type": "Online"
+        }
+      ],
+      "now": "2030-01-01T08:00:00"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/api/appointments",
+    "status": 409,
+    "expected": 409,
+    "passed": true,
+    "response": {
+      "error": "This appointment overlaps another booking. Choose another time."
+    }
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/appointments/1",
+    "status": 200,
+    "expected": 200,
+    "passed": true,
+    "response": {
+      "action_message": "Appointment marked cancelled.",
+      "date": "2030-01-02",
+      "department": "Cardiology",
+      "doctor": "Dr. Workflow Test",
+      "doctor_id": 4,
+      "duration_minutes": 30,
+      "end_time": "09:30",
+      "id": 1,
+      "patient": "Journey Patient",
+      "reference": "MQ-0001",
+      "status": "Cancelled",
+      "time": "09:00",
+      "type": "Online",
+      "undo": {
+        "expires_at": 1795513637.7698312,
+        "seconds": 5,
+        "token": "fSnYNIgammUmnHMmDTGldpiqrLGD4x69"
+      }
+    }
+  },
+  {
+    "method": "DELETE",
+    "path": "/api/appointments/1/patient-list",
+    "status": 200,
+    "expected": 200,
+    "passed": true,
+    "response": {
+      "action_message": "Removed from your list. Hospital history is retained.",
+      "hidden": true,
+      "undo": {
+        "expires_at": 1795513637.7876363,
+        "seconds": 5,
+        "token": "Yv1SRxWRANfRTEaIPE2K7aODeGvyGqPh"
+      }
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/api/appointments",
+    "status": 201,
+    "expected": 201,
+    "passed": true,
+    "response": {
+      "action_message": "Appointment booked.",
+      "date": "2030-01-02",
+      "department": "Cardiology",
+      "doctor": "Dr. Workflow Test",
+      "doctor_id": 4,
+      "duration_minutes": 30,
+      "end_time": "10:30",
+      "id": 2,
+      "patient": "Journey Patient",
+      "reference": "MQ-0002",
+      "status": "Confirmed",
+      "time": "10:00",
+      "type": "Online",
+      "undo": {
+        "expires_at": 1795513637.814081,
+        "seconds": 5,
+        "token": "A5kQwWp9C8N8_K5cOqbdfkGk0kvpYxUp"
+      }
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/api/appointments",
+    "status": 201,
+    "expected": 201,
+    "passed": true,
+    "response": {
+      "action_message": "Appointment booked.",
+      "date": "2030-01-02",
+      "department": "Cardiology",
+      "doctor": "Dr. Workflow Test",
+      "doctor_id": 4,
+      "duration_minutes": 30,
+      "end_time": "11:30",
+      "id": 3,
+      "patient": "Demo Walk-in",
+      "reference": "MQ-0003",
+      "status": "Confirmed",
+      "time": "11:00",
+      "type": "Walk-in",
+      "undo": {
+        "expires_at": 1795513637.840101,
+        "seconds": 5,
+        "token": "P2cGeojMuiaZnO16tnKUs5d0bByzB5sE"
+      }
+    }
+  },
+  {
+    "method": "GET",
+    "path": "/api/admin/doctors",
+    "status": 403,
+    "expected": 403,
+    "passed": true,
+    "response": {
+      "error": "You do not have permission to access this resource."
+    }
+  }
+]

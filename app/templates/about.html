@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#edf5f3">
+    <title>MediQueue | About us</title>
+    <link rel="stylesheet" href="/static/aesthetic.css">
+</head>
+<body class="home-page about-page">
+    <a href="#team" class="skip-link">Skip to our team</a>
+    <div class="home-backdrop" aria-hidden="true"><div class="background-scene scene-hospital is-active"></div></div>
+    <header class="home-header">
+        <a class="home-brand" href="/" aria-label="MediQueue home"><span class="brand-symbol" aria-hidden="true">+</span>MediQueue</a>
+        <nav aria-label="Main navigation"><a class="home-signin" href="/">Back to portals <span aria-hidden="true">↗</span></a></nav>
+    </header>
+    <main id="team" class="about-main">
+        <div class="home-intro">
+            <p class="home-eyebrow">THE PEOPLE BEHIND MEDIQUEUE</p>
+            <h1>Made together.<br>With <em>care.</em></h1>
+            <p class="home-description">Meet the team who created MediQueue, a hospital appointment<br class="desktop-break"> and queue management system designed to make care easier to coordinate.</p>
+        </div>
+        <ul class="team-grid" aria-label="MediQueue creators">
+            {% for photo, name, role, contribution in [
+                ('abug.jfif', 'Sidfrey F. Abug', 'Doctor Portal Developer', 'Developed the doctor portal for managing availability, viewing the appointment calendar, and monitoring the patient queue.'),
+                ('aquino.png', 'Casey Gabrielle D. Aquino', 'Full Stack Integration Developer', 'Connected the frontend and backend through Flask, integrated portal workflows and database operations, and refined the interface and application logic.'),
+                ('asi.png', 'Christine Nicole E. Asi', 'Admin Portal Developer', 'Developed the admin portal for coordinating appointments, registering walk-in patients, and managing hospital operations.'),
+                ('quiatchon.png', 'Lord Grey D. Quiatchon', 'Patient Portal Developer', 'Developed the patient portal for finding doctors, booking appointments, and managing the patient’s appointment list.'),
+                ('vijar.png', 'JM D. Vijar', 'Database Developer', 'Designed the database structure and data relationships that support user accounts, doctor schedules, and appointment records.')
+            ] %}
+            <li class="team-card">
+                <img src="{{ url_for('static', filename='images/team/' ~ photo) }}" alt="Portrait of {{ name }}" width="400" height="440">
+                <div class="team-caption"><h2>{{ name }}</h2><p class="team-role">{{ role }}</p><p class="team-contribution">{{ contribution }}</p></div>
+            </li>
+            {% endfor %}
+        </ul>
+        <p class="about-note">A shared project, built around a simpler patient and hospital experience.</p>
+    </main>
+    <footer class="home-footer"><span>MediQueue © 2026</span><span>Hospital Appointment &amp; Queue Management</span><span>Philippine Time</span></footer>
+</body>
+</html>
+

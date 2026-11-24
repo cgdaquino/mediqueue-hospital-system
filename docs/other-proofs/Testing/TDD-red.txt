@@ -1,0 +1,171 @@
+FFFFFFFF                                                                 [100%]
+================================== FAILURES ===================================
+________________ test_rejects_malformed_email[missing-domain@] ________________
+
+email = 'missing-domain@'
+
+    @pytest.mark.parametrize('email',['missing-domain@','@missing-name.com','a b@test.com','a@@test.com'])
+    def test_rejects_malformed_email(email):
+>       with pytest.raises(ValueError): validate_patient_registration('Patient',email,'ValidPass123!')
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_registration_validation.py:6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'Patient', email = 'missing-domain@', password = 'ValidPass123!'
+
+    def validate_patient_registration(name, email, password):
+        """Validation boundary under test-first development."""
+>       raise NotImplementedError('Patient registration validator is not implemented yet.')
+E       NotImplementedError: Patient registration validator is not implemented yet.
+
+app\registration.py:3: NotImplementedError
+_______________ test_rejects_malformed_email[@missing-name.com] _______________
+
+email = '@missing-name.com'
+
+    @pytest.mark.parametrize('email',['missing-domain@','@missing-name.com','a b@test.com','a@@test.com'])
+    def test_rejects_malformed_email(email):
+>       with pytest.raises(ValueError): validate_patient_registration('Patient',email,'ValidPass123!')
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_registration_validation.py:6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'Patient', email = '@missing-name.com', password = 'ValidPass123!'
+
+    def validate_patient_registration(name, email, password):
+        """Validation boundary under test-first development."""
+>       raise NotImplementedError('Patient registration validator is not implemented yet.')
+E       NotImplementedError: Patient registration validator is not implemented yet.
+
+app\registration.py:3: NotImplementedError
+_________________ test_rejects_malformed_email[a b@test.com] __________________
+
+email = 'a b@test.com'
+
+    @pytest.mark.parametrize('email',['missing-domain@','@missing-name.com','a b@test.com','a@@test.com'])
+    def test_rejects_malformed_email(email):
+>       with pytest.raises(ValueError): validate_patient_registration('Patient',email,'ValidPass123!')
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_registration_validation.py:6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'Patient', email = 'a b@test.com', password = 'ValidPass123!'
+
+    def validate_patient_registration(name, email, password):
+        """Validation boundary under test-first development."""
+>       raise NotImplementedError('Patient registration validator is not implemented yet.')
+E       NotImplementedError: Patient registration validator is not implemented yet.
+
+app\registration.py:3: NotImplementedError
+__________________ test_rejects_malformed_email[a@@test.com] __________________
+
+email = 'a@@test.com'
+
+    @pytest.mark.parametrize('email',['missing-domain@','@missing-name.com','a b@test.com','a@@test.com'])
+    def test_rejects_malformed_email(email):
+>       with pytest.raises(ValueError): validate_patient_registration('Patient',email,'ValidPass123!')
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_registration_validation.py:6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'Patient', email = 'a@@test.com', password = 'ValidPass123!'
+
+    def validate_patient_registration(name, email, password):
+        """Validation boundary under test-first development."""
+>       raise NotImplementedError('Patient registration validator is not implemented yet.')
+E       NotImplementedError: Patient registration validator is not implemented yet.
+
+app\registration.py:3: NotImplementedError
+__________________ test_rejects_unusable_password[        ] ___________________
+
+password = '        '
+
+    @pytest.mark.parametrize('password',[' '*8,'short','x'*129])
+    def test_rejects_unusable_password(password):
+>       with pytest.raises(ValueError): validate_patient_registration('Patient','patient@test.com',password)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_registration_validation.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'Patient', email = 'patient@test.com', password = '        '
+
+    def validate_patient_registration(name, email, password):
+        """Validation boundary under test-first development."""
+>       raise NotImplementedError('Patient registration validator is not implemented yet.')
+E       NotImplementedError: Patient registration validator is not implemented yet.
+
+app\registration.py:3: NotImplementedError
+____________________ test_rejects_unusable_password[short] ____________________
+
+password = 'short'
+
+    @pytest.mark.parametrize('password',[' '*8,'short','x'*129])
+    def test_rejects_unusable_password(password):
+>       with pytest.raises(ValueError): validate_patient_registration('Patient','patient@test.com',password)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_registration_validation.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'Patient', email = 'patient@test.com', password = 'short'
+
+    def validate_patient_registration(name, email, password):
+        """Validation boundary under test-first development."""
+>       raise NotImplementedError('Patient registration validator is not implemented yet.')
+E       NotImplementedError: Patient registration validator is not implemented yet.
+
+app\registration.py:3: NotImplementedError
+__________________ test_rejects_unusable_password[password2] __________________
+
+password = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+
+    @pytest.mark.parametrize('password',[' '*8,'short','x'*129])
+    def test_rejects_unusable_password(password):
+>       with pytest.raises(ValueError): validate_patient_registration('Patient','patient@test.com',password)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_registration_validation.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'Patient', email = 'patient@test.com'
+password = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+
+    def validate_patient_registration(name, email, password):
+        """Validation boundary under test-first development."""
+>       raise NotImplementedError('Patient registration validator is not implemented yet.')
+E       NotImplementedError: Patient registration validator is not implemented yet.
+
+app\registration.py:3: NotImplementedError
+__________ test_normalizes_name_and_email_without_changing_password ___________
+
+    def test_normalizes_name_and_email_without_changing_password():
+>       assert validate_patient_registration(' Patient Name ',' PATIENT@Test.com ',' ValidPass123! ') == ('Patient Name','patient@test.com',' ValidPass123! ')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_registration_validation.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = ' Patient Name ', email = ' PATIENT@Test.com '
+password = ' ValidPass123! '
+
+    def validate_patient_registration(name, email, password):
+        """Validation boundary under test-first development."""
+>       raise NotImplementedError('Patient registration validator is not implemented yet.')
+E       NotImplementedError: Patient registration validator is not implemented yet.
+
+app\registration.py:3: NotImplementedError
+=========================== short test summary info ===========================
+FAILED tests/test_registration_validation.py::test_rejects_malformed_email[missing-domain@]
+FAILED tests/test_registration_validation.py::test_rejects_malformed_email[@missing-name.com]
+FAILED tests/test_registration_validation.py::test_rejects_malformed_email[a b@test.com]
+FAILED tests/test_registration_validation.py::test_rejects_malformed_email[a@@test.com]
+FAILED tests/test_registration_validation.py::test_rejects_unusable_password[        ]
+FAILED tests/test_registration_validation.py::test_rejects_unusable_password[short]
+FAILED tests/test_registration_validation.py::test_rejects_unusable_password[password2]
+FAILED tests/test_registration_validation.py::test_normalizes_name_and_email_without_changing_password
+8 failed in 1.57s
